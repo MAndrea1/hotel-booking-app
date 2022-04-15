@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -33,10 +34,10 @@ public class UserController {
         return userService.findAllByRole(3);
     }
 
-    @GetMapping("/user/{id}")
-    @PreAuthorize("#userId == principal.getName()")
-    public String getEmployeesById(@PathVariable(value = "userId") Integer userId, Principal principal) {
-        return "content" + userId + " " + principal.getName();
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public Optional<User> getEmployeesById(@PathVariable(value = "userId") String userId, Principal principal) {
+        return userService.findByUserId(userId);
     }
 
 //    @GetMapping("/user/{id}")

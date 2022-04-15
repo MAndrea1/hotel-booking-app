@@ -29,6 +29,11 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public Optional<User> findByUserId(String userId) {
+        return userRepository.findByUserId(Integer.parseInt(userId));
+    }
+
+    @Override
     public Boolean existsByEmail(String userEmail) {
         return userRepository.existsByUserEmail(userEmail);
     }

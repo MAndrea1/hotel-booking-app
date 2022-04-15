@@ -21,22 +21,21 @@ public class UserDetailsServiceImp implements UserDetailsService {
     private UserServiceImp userServiceImp;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userServiceImp.findByUserEmail(email).get();
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        User user = userServiceImp.findByUserId(userId).get();
         if(user == null) {
             throw  new UsernameNotFoundException("--No User Found--");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getFkUserrole().getUserroleRole()));
         return new org.springframework.security.core.userdetails.User(
-                user.getUserEmail(),
+                user.getUserId().toString(),
                 user.getUserPassword(),
                 true,
                 true,
                 true,
                 true,
                 authorities
-//                getAuthorities(List.of("ROLE_" + user.getFkUserrole().getUserroleRole()))
         );
     }
 

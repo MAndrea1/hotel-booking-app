@@ -26,8 +26,8 @@ public class OnePerRequest extends OncePerRequestFilter{
         try{
             String token = getToken(request);
             if (token != null && tokenGen.validateToken(token)) {
-                String email = tokenGen.getEmailFromToken(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                String id = tokenGen.getIdFromToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(id);
 
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(userDetails,

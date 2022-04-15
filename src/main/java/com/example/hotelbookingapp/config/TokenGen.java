@@ -48,6 +48,11 @@ public class TokenGen {
                 .getBody().getSubject();
     }
 
+    public String getIdFromToken (String token) {
+        return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token)
+                .getBody().getSubject();
+    }
+
     public Boolean validateToken (String token) {
         try{
             Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token);

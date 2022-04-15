@@ -79,7 +79,7 @@ public class RegistrationController {
 
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        loginUser.getEmail(), loginUser.getPassword()));
+                        userServiceImp.findByUserEmail(loginUser.getEmail()).get().getUserId(), loginUser.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
