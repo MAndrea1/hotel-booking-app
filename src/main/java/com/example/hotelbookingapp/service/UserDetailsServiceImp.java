@@ -26,6 +26,8 @@ public class UserDetailsServiceImp implements UserDetailsService {
         if(user == null) {
             throw  new UsernameNotFoundException("--No User Found--");
         }
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getFkUserrole().getUserroleRole()));
         return new org.springframework.security.core.userdetails.User(
                 user.getUserEmail(),
                 user.getUserPassword(),
@@ -33,7 +35,8 @@ public class UserDetailsServiceImp implements UserDetailsService {
                 true,
                 true,
                 true,
-                getAuthorities(List.of(user.getFkUserrole().getUserroleRole()))
+                authorities
+//                getAuthorities(List.of("ROLE_" + user.getFkUserrole().getUserroleRole()))
         );
     }
 

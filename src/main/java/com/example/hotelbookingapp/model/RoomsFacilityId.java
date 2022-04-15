@@ -15,7 +15,7 @@ public class RoomsFacilityId implements Serializable {
     private static final long serialVersionUID = -735072334848189307L;
     @Column(name = "fk_room_number", nullable = false)
     private Integer fkRoomNumber;
-    @Column(name = "fk_roomfacility_id", nullable = false)
+    @Column(name = "fk_facility_id", nullable = false)
     private Integer fkRoomfacilityId;
 
     public Integer getFkRoomfacilityId() {

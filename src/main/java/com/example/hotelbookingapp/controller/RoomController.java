@@ -1,5 +1,6 @@
 package com.example.hotelbookingapp.controller;
 
+import com.example.hotelbookingapp.dto.RoomDto;
 import com.example.hotelbookingapp.model.Room;
 import com.example.hotelbookingapp.repository.RoomRepository;
 import com.example.hotelbookingapp.service.RoomService;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController

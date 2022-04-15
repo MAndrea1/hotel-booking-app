@@ -2,6 +2,7 @@ package com.example.hotelbookingapp.repository;
 
 import com.example.hotelbookingapp.HotelBookingAppApplication;
 import com.example.hotelbookingapp.model.Room;
+import com.example.hotelbookingapp.service.Imp.RoomServiceImp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,9 +15,12 @@ class RoomRepositoryTest {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Autowired
+    private RoomServiceImp roomServiceImp;
+
     @Test
     public void printRoomTypeAll(){
-        List<Room> roomList = roomRepository.findAll();
+        List<Room> roomList = roomServiceImp.findAll();
 
         System.out.println("Room = " + roomList);
     }

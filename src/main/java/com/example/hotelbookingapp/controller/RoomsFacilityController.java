@@ -19,8 +19,13 @@ public class RoomsFacilityController {
     private RoomsFacilityService roomsFacilityService;
 
     @GetMapping({"/roomfacilities"})
-
-    public List<RoomsFacility> getBooking() {
+    public List<RoomsFacility> getFacilities() {
         return roomsFacilityService.findAll();
     }
+
+    @GetMapping({"/roomfacilities/{id}"})
+    public List<RoomsFacility> getFacilityListForId() {
+        return roomsFacilityService.findAll();
+    }
+
 }

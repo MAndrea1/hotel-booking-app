@@ -17,12 +17,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] WHITE_LIST_URLS = {
             "/test",
-            "/registration/**"
+            "/registration/**",
+            "/api/rooms"
     };
 
     @Autowired

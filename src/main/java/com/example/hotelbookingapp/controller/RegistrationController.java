@@ -48,10 +48,10 @@ public class RegistrationController {
     public ResponseEntity<?> newUser(@Valid @RequestBody SignUpUser signUpUser, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors())
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Error in fields", HttpStatus.BAD_REQUEST);
 
             if (Boolean.TRUE.equals(userServiceImp.existsByEmail(signUpUser.getEmail())))
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Email already in database", HttpStatus.BAD_REQUEST);
 
             User user = new User(getrole(signUpUser), signUpUser.getEmail(), passwordEncoder.encode(signUpUser.getPassword()));
 
