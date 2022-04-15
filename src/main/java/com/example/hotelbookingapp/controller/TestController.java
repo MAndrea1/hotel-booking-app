@@ -10,7 +10,10 @@ public class TestController {
 
     @GetMapping("/test")
     public String test(Principal principal) {
-        return "Hello";
+        if (principal != null) {
+            return principal.toString();
+        }
+        return principal.toString() + "No user logged in";
     }
 
     @GetMapping("/api/test")

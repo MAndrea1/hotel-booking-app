@@ -27,5 +27,17 @@ public class RoomServiceImp implements RoomService {
     @Override
     public Optional<Room> findByRoomNumber(Integer id){
         return roomRepository.findById(id);
-    };
+    }
+
+    @Override
+    public List<Room> findByCustom(String facility) throws Exception {
+        try {
+            List<Room> rooms = roomRepository.findByCustom(facility);
+            return rooms;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    ;
 }

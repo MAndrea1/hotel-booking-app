@@ -21,8 +21,13 @@ class RoomRepositoryTest {
     @Test
     public void printRoomTypeAll(){
         List<Room> roomList = roomServiceImp.findAll();
-
         System.out.println("Room = " + roomList);
+    }
+
+    @Test
+    public void printRoomByFacility() throws Exception {
+        List<Room> roomList = roomServiceImp.findByCustom("Panoramic view");
+        System.out.println(roomList);
     }
 
 }

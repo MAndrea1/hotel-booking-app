@@ -26,8 +26,8 @@ public class OnePerRequest extends OncePerRequestFilter{
         try{
             String token = getToken(request);
             if (token != null && tokenGen.validateToken(token)) {
-                String dniUser = tokenGen.getEmailFromToken(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(dniUser);
+                String email = tokenGen.getEmailFromToken(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(userDetails,
@@ -35,7 +35,7 @@ public class OnePerRequest extends OncePerRequestFilter{
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }catch (Exception e){
-            logger.error("--Error in TokenGen-doFilterInternal--");
+            logger.error("--Error in TokenGen - doFilterInternal--");
         }
 
         filterChain.doFilter(request,response);
