@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface UserService {
     List<User> findAll();
     Optional<User> findByUserEmail(String userEmail);
+    Boolean existsByEmail (String userEmail);
 }

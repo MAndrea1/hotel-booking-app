@@ -24,7 +24,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userServiceImp.findByUserEmail(email).get();
         if(user == null) {
-            throw  new UsernameNotFoundException("No User Found");
+            throw  new UsernameNotFoundException("--No User Found--");
         }
         return new org.springframework.security.core.userdetails.User(
                 user.getUserEmail(),
