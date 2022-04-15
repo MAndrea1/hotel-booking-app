@@ -33,6 +33,16 @@ public class UserServiceImp implements UserService {
         return userRepository.existsByUserEmail(userEmail);
     }
 
+    @Override
+    public List<User> findAllByRole(Integer role) {
+        return userRepository.findAllByRole(role);
+    }
+
+    @Override
+    public List<User> findAllExceptRole(Integer role) {
+        return userRepository.findAllExceptRole(role);
+    }
+
     public User save(User user) throws Exception {
         try{
             user = userRepository.save(user);

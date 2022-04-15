@@ -13,14 +13,20 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasRole('SUPERADMIN')")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping({"/users"})
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
-    public List<User> getUsers() {
+    @GetMapping({"/allusers"})
+    public List<User> getAllUsers() {
         return userService.findAll();
+    }
+
+    @GetMapping({"/users"})
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<User> getPlainUsers() {
+        return userService.findAllByRole(3);
     }
 }
