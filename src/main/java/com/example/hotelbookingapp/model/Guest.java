@@ -1,9 +1,12 @@
 package com.example.hotelbookingapp.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "guests")
+@Data
 public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,51 +28,6 @@ public class Guest {
     @Column(name = "guest_country", length = 45)
     private String guestCountry;
 
-    public String getGuestCountry() {
-        return guestCountry;
-    }
-
-    public void setGuestCountry(String guestCountry) {
-        this.guestCountry = guestCountry;
-    }
-
-    public String getGuestPhone() {
-        return guestPhone;
-    }
-
-    public void setGuestPhone(String guestPhone) {
-        this.guestPhone = guestPhone;
-    }
-
-    public String getGuestEmail() {
-        return guestEmail;
-    }
-
-    public void setGuestEmail(String guestEmail) {
-        this.guestEmail = guestEmail;
-    }
-
-    public String getGuestLastname() {
-        return guestLastname;
-    }
-
-    public void setGuestLastname(String guestLastname) {
-        this.guestLastname = guestLastname;
-    }
-
-    public String getGuestFirstname() {
-        return guestFirstname;
-    }
-
-    public void setGuestFirstname(String guestFirstname) {
-        this.guestFirstname = guestFirstname;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Column(name = "fk_user_id")
+    private Integer fkUserId;
 }

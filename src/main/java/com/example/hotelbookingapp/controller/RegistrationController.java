@@ -4,11 +4,12 @@ import com.example.hotelbookingapp.config.TokenGen;
 import com.example.hotelbookingapp.dto.JwtDto;
 import com.example.hotelbookingapp.dto.LoginUser;
 import com.example.hotelbookingapp.dto.SignUpUser;
+import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.model.Role;
 import com.example.hotelbookingapp.model.User;
 import com.example.hotelbookingapp.model.UserRole;
+import com.example.hotelbookingapp.service.Imp.GuestServiceImp;
 import com.example.hotelbookingapp.service.Imp.UserServiceImp;
-import com.example.hotelbookingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.util.HashSet;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/registration")
@@ -34,6 +33,9 @@ public class RegistrationController {
 
     @Autowired
     UserServiceImp userServiceImp;
+
+    @Autowired
+    GuestServiceImp guestServiceImp;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -49,13 +51,26 @@ public class RegistrationController {
         try {
             if (bindingResult.hasErrors())
                 return new ResponseEntity<>("Error in fields", HttpStatus.BAD_REQUEST);
-
             if (Boolean.TRUE.equals(userServiceImp.existsByEmail(signUpUser.getEmail())))
                 return new ResponseEntity<>("Email already in database", HttpStatus.BAD_REQUEST);
 
-            User user = new User(getrole(signUpUser), signUpUser.getEmail(), passwordEncoder.encode(signUpUser.getPassword()));
+            User newUser = new User();
+            newUser.setUserEmail(signUpUser.getEmail());
+            newUser.setUserPassword(passwordEncoder.encode(signUpUser.getPassword()));
+            newUser.setFkUserrole(getrole(signUpUser));
+            userServiceImp.save(newUser);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(userServiceImp.save(user));
+            Guest newGuest = new Guest();
+            newGuest.setGuestFirstname(signUpUser.getFirstName());
+            newGuest.setGuestLastname(signUpUser.getLastName());
+            newGuest.setGuestEmail(signUpUser.getEmail());
+            newGuest.setGuestPhone(signUpUser.getPhone());
+            newGuest.setGuestCountry(signUpUser.getCountry());
+            newUser = userServiceImp.findByUserEmail(signUpUser.getEmail()).get();
+            newGuest.setFkUserId(newUser.getUserId());
+            guestServiceImp.save(newGuest);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("User " + signUpUser.getEmail() + " created successfully");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Couldn't retrieve data from servers, please try again later\"}");
         }
@@ -66,7 +81,7 @@ public class RegistrationController {
         if (signUpUser.getRole().equals(2)) {
             role = Role.ADMIN.toString();
         } else if (signUpUser.getRole().equals(1)) {
-            role = Role.SUPERUSER.toString();
+            role = Role.SUPERADMIN.toString();
         }
         return new UserRole(signUpUser.getRole(), role);
     }
@@ -75,19 +90,15 @@ public class RegistrationController {
     @PostMapping("/login")
     public ResponseEntity<JwtDto> login (@Valid @RequestBody LoginUser loginUser, BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Field missing", HttpStatus.BAD_REQUEST);
 
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        userServiceImp.findByUserEmail(loginUser.getEmail()).get().getUserId(), loginUser.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenGen.generateToken(authentication);
-
-        JwtDto jwtDto = new JwtDto(jwt);
-
-        return new ResponseEntity<>(jwtDto,HttpStatus.OK);
+            Authentication authentication =
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                            userServiceImp.findByUserEmail(loginUser.getEmail()).get().getUserId(), loginUser.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenGen.generateToken(authentication);
+            JwtDto jwtDto = new JwtDto(jwt);
+            return new ResponseEntity<>(jwtDto,HttpStatus.OK);
     }
 
     @PostMapping("/refresh-token")

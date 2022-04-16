@@ -23,7 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] WHITE_LIST_URLS = {
             "/test",
             "/registration/**",
-            "/api/rooms/**"
+            "/api/rooms/**",
+            "/api/bookings/**"
     };
 
     @Autowired
@@ -71,6 +72,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(onePerRequest(), UsernamePasswordAuthenticationFilter.class);
     }
-
-
 }

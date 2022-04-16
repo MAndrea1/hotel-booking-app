@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest(classes = HotelBookingAppApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GuestRepositoryTest {
@@ -20,5 +21,14 @@ class GuestRepositoryTest {
 
         System.out.println("Guests = " + guestList);
     }
+
+    @Test
+    public void printGuestRepositoryById() {
+        Optional<Guest> guestList = guestRepository.findById(2);
+
+        System.out.println("Guests = " + guestList);
+    }
+
+
 
 }
