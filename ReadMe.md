@@ -10,13 +10,14 @@
 - MySql
 
 ### Frontend
+-  Angular
 
 ## Libraries
  - Spring Security
  - Spring Developer Tools
  - MySql Driver
  - Spring Boot Web
- - Thymeleaf
+
 
 Extra
  - Spring Security
@@ -24,7 +25,7 @@ Extra
  
 ## Endpoints
 - Booking
-- Booking Detail (F)
+- Booking Detail
 - Guest
 - Facility
 - Room
