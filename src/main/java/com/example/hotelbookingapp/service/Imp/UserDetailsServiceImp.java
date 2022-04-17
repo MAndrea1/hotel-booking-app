@@ -1,4 +1,4 @@
-package com.example.hotelbookingapp.service;
+package com.example.hotelbookingapp.service.Imp;
 
 import com.example.hotelbookingapp.model.User;
 import com.example.hotelbookingapp.service.Imp.UserServiceImp;

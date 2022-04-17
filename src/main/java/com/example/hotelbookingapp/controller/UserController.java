@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-@PreAuthorize("hasRole('SUPERADMIN')")
+@PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
 public class UserController {
 
     @Autowired
@@ -31,31 +30,29 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     @GetMapping({"/allusers"})
+    @PreAuthorize("hasRole('SUPERADMIN')")
     public List<User> getAllUsers() {
         return userService.findAll();
     }
 
     @GetMapping({"/users"})
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public List<User> getPlainUsers() {
         return userService.findAllByRole(3);
     }
 
     @GetMapping("/user/{userId}")
-    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public Optional<User> getUserById(@PathVariable(value = "userId") String userId, Principal principal) {
         return userService.findByUserId(userId);
     }
 
     @GetMapping("/user/guest/{userId}")
-    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> getGuestById(@PathVariable(value = "userId") String userId, Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(guestService.findByUserId(Integer.valueOf(userId)));
     }
 
     @PutMapping("/user/{userId}")
-    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
-    public ResponseEntity<?> update(@PathVariable(value = "userId") String userId, @RequestBody UpdateUserDto updateUserDto, Principal principal){
+    public ResponseEntity<?> updateUserById(@PathVariable(value = "userId") String userId, @RequestBody UpdateUserDto updateUserDto, Principal principal){
         if (userService.findByUserId(String.valueOf(userId)).get().getFkUserrole().getId() == 1) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, cannot update superadmin\"}");
         }
@@ -71,8 +68,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{userId}")
-    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
-    public ResponseEntity<?> delete(@PathVariable(value = "userId") String userId){
+    public ResponseEntity<?> deleteUserById(@PathVariable(value = "userId") String userId){
         if (userService.findByUserId(String.valueOf(userId)).get().getFkUserrole().getId() == 1) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, cannot delete superadmin\"}");
         }

@@ -1,6 +1,6 @@
 package com.example.hotelbookingapp.config;
 
-import com.example.hotelbookingapp.service.UserDetailsServiceImp;
+import com.example.hotelbookingapp.service.Imp.UserDetailsServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

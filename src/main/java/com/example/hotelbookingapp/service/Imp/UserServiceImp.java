@@ -3,6 +3,7 @@ package com.example.hotelbookingapp.service.Imp;
 
 import com.example.hotelbookingapp.dto.UpdateUserDto;
 import com.example.hotelbookingapp.model.Booking;
+import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.model.User;
 import com.example.hotelbookingapp.repository.UserRepository;
 import com.example.hotelbookingapp.service.UserService;
@@ -24,6 +25,16 @@ public class UserServiceImp implements UserService {
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<User> findById(Integer id) throws Exception {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public User save(UpdateUserDto entity) throws Exception {
+        return null;
     }
 
     @Override
@@ -50,6 +61,7 @@ public class UserServiceImp implements UserService {
     public List<User> findAllExceptRole(Integer role) {
         return userRepository.findAllExceptRole(role);
     }
+
 
     public User save(User user) throws Exception {
         try{

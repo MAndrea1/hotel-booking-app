@@ -1,12 +1,8 @@
 package com.example.hotelbookingapp.controller;
 
-import com.example.hotelbookingapp.dto.RoomDto;
 import com.example.hotelbookingapp.model.Room;
-import com.example.hotelbookingapp.repository.RoomRepository;
-import com.example.hotelbookingapp.service.RoomService;
+import com.example.hotelbookingapp.service.Imp.RoomServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +18,7 @@ import java.util.List;
 public class RoomController {
 
     @Autowired
-    private RoomService roomService;
+    private RoomServiceImp roomService;
 
     @GetMapping({"/rooms"})
     public List<Room> getRooms() {

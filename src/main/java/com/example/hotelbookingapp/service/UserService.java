@@ -9,14 +9,15 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserService {
+public interface UserService extends BaseService<User, UpdateUserDto> {
     List<User> findAll();
     User save(User user) throws Exception;
+    Boolean delete(Integer id) throws Exception;
+    User update(Integer id, UpdateUserDto user) throws Exception;
     Optional<User> findByUserEmail(String userEmail);
     Optional<User> findByUserId(String userId);
     Boolean existsByEmail (String userEmail);
     List<User> findAllByRole(Integer role);
     List<User> findAllExceptRole(Integer role);
-    Boolean delete(Integer id) throws Exception;
-    User update(Integer id, UpdateUserDto user) throws Exception;
+
 }

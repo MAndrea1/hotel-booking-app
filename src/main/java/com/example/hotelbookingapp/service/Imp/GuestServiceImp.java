@@ -1,7 +1,6 @@
 package com.example.hotelbookingapp.service.Imp;
 
 import com.example.hotelbookingapp.model.Guest;
-import com.example.hotelbookingapp.model.User;
 import com.example.hotelbookingapp.repository.GuestRepository;
 import com.example.hotelbookingapp.service.GuestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +45,16 @@ public class GuestServiceImp implements GuestService {
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
+    }
+
+    @Override
+    public Guest update(Integer id, Guest Entity) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Boolean delete(Integer id) throws Exception {
+        return false;
     }
 
 

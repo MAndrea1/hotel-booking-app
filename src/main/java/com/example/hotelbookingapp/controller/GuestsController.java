@@ -3,6 +3,7 @@ package com.example.hotelbookingapp.controller;
 import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.model.User;
 import com.example.hotelbookingapp.service.GuestService;
+import com.example.hotelbookingapp.service.Imp.GuestServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ import java.util.Optional;
 public class GuestsController {
 
     @Autowired
-    private GuestService guestService;
+    private GuestServiceImp guestService;
 
     @GetMapping({"/guests"})
     public List<Guest> getGuests() {

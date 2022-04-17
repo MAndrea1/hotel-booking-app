@@ -4,6 +4,5 @@ import com.example.hotelbookingapp.model.Payment;
 
 import java.util.List;
 
-public interface PaymentService {
-    List<Payment> findAll();
+public interface PaymentService extends BaseService<Payment, Payment> {
 }

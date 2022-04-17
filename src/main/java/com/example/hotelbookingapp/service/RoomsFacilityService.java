@@ -4,6 +4,5 @@ import com.example.hotelbookingapp.model.RoomsFacility;
 
 import java.util.List;
 
-public interface RoomsFacilityService {
-    List<RoomsFacility> findAll();
+public interface RoomsFacilityService extends BaseService<RoomsFacility, RoomsFacility> {
 }

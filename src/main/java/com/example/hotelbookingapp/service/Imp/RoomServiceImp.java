@@ -25,6 +25,26 @@ public class RoomServiceImp implements RoomService {
     }
 
     @Override
+    public Optional<Room> findById(Integer id) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Room save(Room entity) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Room update(Integer id, Room Entity) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Boolean delete(Integer id) throws Exception {
+        return null;
+    }
+
+    @Override
     public Optional<Room> findByRoomNumber(Integer id){
         return roomRepository.findById(id);
     }

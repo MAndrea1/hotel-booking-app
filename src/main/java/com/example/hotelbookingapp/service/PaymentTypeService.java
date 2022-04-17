@@ -4,6 +4,6 @@ import com.example.hotelbookingapp.model.PaymentType;
 
 import java.util.List;
 
-public interface PaymentTypeService {
-    List<PaymentType> findAll();
+public interface PaymentTypeService extends BaseService<PaymentType, PaymentType>{
+
 }
