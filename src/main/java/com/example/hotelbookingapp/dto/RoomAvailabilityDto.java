@@ -3,12 +3,12 @@ package com.example.hotelbookingapp.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Data
 public class RoomAvailabilityDto {
 
+    private Integer roomNumber;
     @NotBlank
     private Date bookingCheckin;
     @NotBlank

@@ -122,7 +122,7 @@ public class RoomServiceImp implements RoomService {
     @Override
     public List<Room> findAvailable(RoomAvailabilityDto roomAvailabilityDto) throws Exception {
         try {
-            List<Room> rooms = roomRepository.findAvailable(roomAvailabilityDto.getBookingCheckin(), roomAvailabilityDto.getBookingCheckout(), roomAvailabilityDto.getPax(), roomAvailabilityDto.getRoomType());
+            List<Room> rooms = roomRepository.findAvailable(roomAvailabilityDto.getRoomNumber(), roomAvailabilityDto.getBookingCheckin(), roomAvailabilityDto.getBookingCheckout(), roomAvailabilityDto.getPax(), roomAvailabilityDto.getRoomType());
             return rooms;
         }catch (Exception e){
             throw new Exception(e.getMessage());

@@ -65,11 +65,12 @@ class RoomRepositoryTest {
 
     @Test
     public void printFindAvailable() throws Exception{
+        Integer roomNumber = null;
         Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-16");
         Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-20");
         Integer maxpax = 4;
         Integer roomType = 3;
-        System.out.println(roomRepository.findAvailable(startDate,endDate,maxpax,roomType));
+        System.out.println(roomRepository.findAvailable(roomNumber, startDate,endDate,maxpax,roomType));
     }
 
 }
