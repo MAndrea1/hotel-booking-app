@@ -17,4 +17,6 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             nativeQuery = true
     )
     List<Room> findByCustom(@Param("facility") String facility);
+
+
 }

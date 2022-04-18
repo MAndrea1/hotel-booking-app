@@ -1,31 +1,37 @@
 package com.example.hotelbookingapp.controller;
 
-import com.example.hotelbookingapp.model.Room;
+import com.example.hotelbookingapp.dto.UpdateGuestDto;
+import com.example.hotelbookingapp.dto.UpdateRoomDto;
+import com.example.hotelbookingapp.model.*;
+import com.example.hotelbookingapp.service.Imp.FacilityServiceImp;
 import com.example.hotelbookingapp.service.Imp.RoomServiceImp;
+import com.example.hotelbookingapp.service.Imp.RoomTypeServiceImp;
+import com.example.hotelbookingapp.service.Imp.RoomsFacilityServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/rooms")
 public class RoomController {
 
     @Autowired
     private RoomServiceImp roomService;
 
-    @GetMapping({"/rooms"})
+    @GetMapping({""})
     public List<Room> getRooms() {
         return roomService.findAll();
     }
 
-    @GetMapping("/rooms/filter")
+    @GetMapping("/filter")
     public ResponseEntity<?> findByCustom(@RequestParam String facility) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(roomService.findByCustom(facility));
@@ -34,4 +40,44 @@ public class RoomController {
         }
     }
 
+    @PostMapping("/addnewroom")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public ResponseEntity<?> newRoom(@Valid @RequestBody UpdateRoomDto updateRoomDto, BindingResult bindingResult) {
+        try {
+            if (bindingResult.hasErrors())
+                return new ResponseEntity<>("Error in fields", HttpStatus.BAD_REQUEST);
+            if (Boolean.TRUE.equals(roomService.existsByRoomNumber(updateRoomDto.getRoomId())))
+                return new ResponseEntity<>("Room number already in database", HttpStatus.BAD_REQUEST);
+            roomService.save(updateRoomDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Room " + updateRoomDto.getRoomId() + " created successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Couldn't retrieve data from servers, please try again later\"}");
+        }
+    }
+
+    @PutMapping("/{roomId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public ResponseEntity<?> updateRoom(@PathVariable(value = "roomId") String roomId, @Valid @RequestBody UpdateRoomDto updateRoomDto, BindingResult bindingResult) {
+        try {
+            if (bindingResult.hasErrors())
+                return new ResponseEntity<>("Error in fields", HttpStatus.BAD_REQUEST);
+            if (Boolean.FALSE.equals(roomService.existsByRoomNumber(updateRoomDto.getRoomId())))
+                return new ResponseEntity<>("Room number not in database", HttpStatus.BAD_REQUEST);
+            roomService.update(Integer.valueOf(roomId), updateRoomDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Room " + updateRoomDto.getRoomId() + " updated successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Couldn't retrieve data from servers, please try again later\"}");
+        }
+    }
+
+    @DeleteMapping("/{roomId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public ResponseEntity<?> deleteRoom(@PathVariable(value = "roomId") String roomId){
+        try {
+            roomService.delete(Integer.valueOf(roomId));
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Room deleted");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, couldn't delete entity\"}");
+        }
+    }
 }

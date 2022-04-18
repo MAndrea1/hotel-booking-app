@@ -20,4 +20,7 @@ public interface GuestRepository extends JpaRepository<Guest, Integer> {
             nativeQuery = true
     )
     Optional<Guest> findByUserId(@Param("userId") Integer Id);
+
+    boolean existsByFkUserId(Integer id);
+    boolean existsByGuestEmail(String email);
 }

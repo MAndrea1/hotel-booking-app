@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class UpdateGuestDto {
 
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String phone;
-    private String country;
+    private String guestEmail;
+    private String guestFirstname;
+    private String guestLastname;
+    private String guestPhone;
+    private String guestCountry;
 }
