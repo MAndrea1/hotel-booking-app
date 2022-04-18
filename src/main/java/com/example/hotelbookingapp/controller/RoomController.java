@@ -1,5 +1,6 @@
 package com.example.hotelbookingapp.controller;
 
+import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
 import com.example.hotelbookingapp.dto.UpdateGuestDto;
 import com.example.hotelbookingapp.dto.UpdateRoomDto;
 import com.example.hotelbookingapp.model.*;
@@ -35,6 +36,15 @@ public class RoomController {
     public ResponseEntity<?> findByCustom(@RequestParam String facility) {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(roomService.findByCustom(facility));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+        }
+    }
+
+    @GetMapping("/checkavailability")
+    public ResponseEntity<?> checkAvailability(@RequestBody RoomAvailabilityDto roomAvailabilityDto) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(roomService.findAvailable(roomAvailabilityDto));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }

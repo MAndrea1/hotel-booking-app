@@ -3,15 +3,15 @@ package com.example.hotelbookingapp.repository;
 import com.example.hotelbookingapp.HotelBookingAppApplication;
 import com.example.hotelbookingapp.model.Facility;
 import com.example.hotelbookingapp.model.Room;
-import com.example.hotelbookingapp.model.RoomsFacility;
-import com.example.hotelbookingapp.model.RoomsFacilityId;
 import com.example.hotelbookingapp.service.Imp.RoomServiceImp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest(classes = HotelBookingAppApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -61,6 +61,15 @@ class RoomRepositoryTest {
         newRoom.setFacilities(facilities);
         roomRepository.save(newRoom);
         System.out.println(roomRepository.findById(888));
+    }
+
+    @Test
+    public void printFindAvailable() throws Exception{
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-16");
+        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-20");
+        Integer maxpax = 4;
+        Integer roomType = 3;
+        System.out.println(roomRepository.findAvailable(startDate,endDate,maxpax,roomType));
     }
 
 }

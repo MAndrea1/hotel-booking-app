@@ -1,6 +1,7 @@
 package com.example.hotelbookingapp.service.Imp;
 
 
+import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
 import com.example.hotelbookingapp.dto.UpdateRoomDto;
 import com.example.hotelbookingapp.model.Facility;
 import com.example.hotelbookingapp.model.Room;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,5 +119,13 @@ public class RoomServiceImp implements RoomService {
         return roomRepository.existsById(number);
     }
 
-    ;
+    @Override
+    public List<Room> findAvailable(RoomAvailabilityDto roomAvailabilityDto) throws Exception {
+        try {
+            List<Room> rooms = roomRepository.findAvailable(roomAvailabilityDto.getBookingCheckin(), roomAvailabilityDto.getBookingCheckout(), roomAvailabilityDto.getPax(), roomAvailabilityDto.getRoomType());
+            return rooms;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 }
