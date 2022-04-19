@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -41,10 +43,13 @@ public class RoomController {
         }
     }
 
-    @GetMapping("/checkavailability")
-    public ResponseEntity<?> checkAvailability(@RequestBody RoomAvailabilityDto roomAvailabilityDto) {
+    @PostMapping("/checkavailability")
+    public ResponseEntity<?> checkAvailability(@Valid @RequestBody RoomAvailabilityDto roomAvailabilityDto, BindingResult bindingResult) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(roomService.findAvailable(roomAvailabilityDto));
+            if (bindingResult.hasErrors())
+                return new ResponseEntity<>("Error in fields", HttpStatus.BAD_REQUEST);
+            List<Room> availableRoom = roomService.findAvailable(roomAvailabilityDto);
+            return ResponseEntity.status(HttpStatus.OK).body(availableRoom);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
         }

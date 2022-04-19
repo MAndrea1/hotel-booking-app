@@ -14,14 +14,16 @@ public class Payment {
     @Column(name = "payment_id", nullable = false)
     private Integer id;
 
-    @Column(name = "fk_booking_number", nullable = false)
-    private Integer fkBookingNumber;
+    @OneToOne
+    @JoinColumn (name = "fk_booking_number", nullable = false)
+    private Booking fkBookingNumber;
 
-    @Column(name = "fk_paymenttype_id", nullable = false)
-    private Integer fkPaymenttypeId;
+    @ManyToOne
+    @JoinColumn(name = "fk_paymenttype_id", nullable = false)
+    private PaymentType fkPaymenttypeId;
 
     @Column(name = "payments_amount", nullable = false)
-    private Double paymentsAmount;
+    private Float paymentsAmount;
 
     @Column(name = "payment_date", nullable = false)
     private LocalDate paymentDate;

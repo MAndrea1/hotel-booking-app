@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -122,9 +125,17 @@ public class RoomServiceImp implements RoomService {
     @Override
     public List<Room> findAvailable(RoomAvailabilityDto roomAvailabilityDto) throws Exception {
         try {
-            List<Room> rooms = roomRepository.findAvailable(roomAvailabilityDto.getRoomNumber(), roomAvailabilityDto.getBookingCheckin(), roomAvailabilityDto.getBookingCheckout(), roomAvailabilityDto.getPax(), roomAvailabilityDto.getRoomType());
-            return rooms;
+            Integer roomNumber = roomAvailabilityDto.getRoomNumber();
+            LocalDate startDate = roomAvailabilityDto.getBookingCheckin();
+            Date date1 = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            LocalDate endDate = roomAvailabilityDto.getBookingCheckout();
+            Date date2 = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Integer maxpax = roomAvailabilityDto.getPax();
+            Integer roomType = roomAvailabilityDto.getRoomType();
+            List<Room> list = roomRepository.findAvailable(roomNumber, date1,date2,maxpax,roomType);
+            return list;
         }catch (Exception e){
+            e.printStackTrace();
             throw new Exception(e.getMessage());
         }
     }

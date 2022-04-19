@@ -1,6 +1,7 @@
 package com.example.hotelbookingapp.repository;
 
 import com.example.hotelbookingapp.HotelBookingAppApplication;
+import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
 import com.example.hotelbookingapp.model.Facility;
 import com.example.hotelbookingapp.model.Room;
 import com.example.hotelbookingapp.service.Imp.RoomServiceImp;
@@ -10,7 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @SpringBootTest(classes = HotelBookingAppApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RoomRepositoryTest {
@@ -46,7 +51,6 @@ class RoomRepositoryTest {
 
     @Test
     public void printAddNewRoom() throws Exception{
-
         Room newRoom = new Room();
         newRoom.setId(888);
         newRoom.setRoomMaxpax(8);
@@ -64,10 +68,33 @@ class RoomRepositoryTest {
     @Test
     public void printFindAvailable() throws Exception{
         Integer roomNumber = null;
-        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-16");
-        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-20");
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01");
+        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-10");
         Integer maxpax = 4;
-        Integer roomType = 3;
-        System.out.println(roomRepository.findAvailable(roomNumber, startDate,endDate,maxpax,roomType));
+        Integer roomType = null;
+        List<Room> list = roomRepository.findAvailable(roomNumber, startDate,endDate,maxpax,roomType);
+        list.stream().forEach(e-> System.out.println(e));
     }
+
+    @Test
+    public void printFindAvailableService() throws Exception{
+        RoomAvailabilityDto roomAvailabilityDto = new RoomAvailabilityDto();
+        Integer roomNumber = null;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.parse("2020-05-01", formatter);
+        LocalDate endDate = LocalDate.parse("2020-05-10", formatter);
+//        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01");
+//        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-10");
+        Integer maxpax = 4;
+        Integer roomType = null;
+        roomAvailabilityDto.setRoomNumber(roomNumber);
+        roomAvailabilityDto.setBookingCheckin(startDate);
+        roomAvailabilityDto.setBookingCheckout(endDate);
+        roomAvailabilityDto.setPax(maxpax);
+        roomAvailabilityDto.setRoomType(roomType);
+        List<Room> list = roomServiceImp.findAvailable(roomAvailabilityDto);
+        list.stream().forEach(e-> System.out.println(e));
+    }
+
 }
