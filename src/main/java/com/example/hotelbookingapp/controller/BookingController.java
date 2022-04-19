@@ -28,16 +28,6 @@ public class BookingController {
         }
     }
 
-    @PostMapping("/save")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
-    public ResponseEntity<?> save(@RequestBody BookingDto entity){
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(bookingService.save(entity));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, couldn't save entity\"}");
-        }
-    }
-
     @PostMapping("/reserve")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> adminreserve(@RequestBody ReserveDto reserveDto){

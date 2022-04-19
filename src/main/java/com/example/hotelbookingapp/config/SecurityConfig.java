@@ -24,7 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/test",
             "/registration/**",
             "/api/rooms/**",
-            "/api/bookings/**"
     };
 
     @Autowired

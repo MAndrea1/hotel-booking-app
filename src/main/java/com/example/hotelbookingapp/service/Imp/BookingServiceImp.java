@@ -2,6 +2,7 @@ package com.example.hotelbookingapp.service.Imp;
 
 import com.example.hotelbookingapp.dto.BookingDto;
 import com.example.hotelbookingapp.dto.ReserveDto;
+import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
 import com.example.hotelbookingapp.mapper.BookingInDTOToBooking;
 import com.example.hotelbookingapp.model.Booking;
 import com.example.hotelbookingapp.model.Payment;
@@ -99,6 +100,18 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public Booking reserve(ReserveDto reserveDto) throws Exception {
+
+        RoomAvailabilityDto roomAvailabilityDto = new RoomAvailabilityDto();
+        roomAvailabilityDto.setRoomNumber(reserveDto.getListRooms().get(0));
+        roomAvailabilityDto.setBookingCheckin(reserveDto.getBookingCheckin());
+        roomAvailabilityDto.setBookingCheckout(reserveDto.getBookingCheckout());
+        roomAvailabilityDto.setPax(1);
+        List<Room> availableRooms = roomService.findAvailable(roomAvailabilityDto);
+
+        if (availableRooms.isEmpty()) {
+            throw new Exception("--Room not available--");
+        }
+
         Booking booking = new Booking();
         booking.setBookingDate(LocalDate.now());
         booking.setBookingCheckin(reserveDto.getBookingCheckin());

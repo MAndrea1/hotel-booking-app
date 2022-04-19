@@ -100,10 +100,9 @@ public class UserController {
     }
 
     @PostMapping("reserve/{userId}")
-    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> reserve(@PathVariable(value = "userId") String userId, @RequestBody ReserveDto reserveDto){
-        reserveDto.setFkGuestId(Integer.valueOf(userId));
         try {
+            reserveDto.setFkGuestId(Integer.valueOf(guestService.findByUserId(Integer.valueOf(userId)).get().getId()));
             return ResponseEntity.status(HttpStatus.OK).body(bookingService.reserve(reserveDto));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, couldn't make reserve\"}");

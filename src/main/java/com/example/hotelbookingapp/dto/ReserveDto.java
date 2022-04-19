@@ -1,12 +1,9 @@
 package com.example.hotelbookingapp.dto;
 
-import com.example.hotelbookingapp.model.Room;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Data
