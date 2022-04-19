@@ -25,8 +25,11 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 
     @Query(
             value = "SELECT * " +
-                    "FROM rooms JOIN bookings_rooms ON fk_room_number = room_number JOIN bookings ON fk_booking_id = booking_id " +
-                    "WHERE booking_checkin NOT BETWEEN :startDate AND :endDate AND booking_checkout NOT BETWEEN :startDate AND :endDate " +
+                    "FROM rooms LEFT JOIN bookings_rooms ON fk_room_number = room_number LEFT JOIN bookings ON fk_booking_id = booking_id " +
+                    "WHERE booking_checkin IS NULL " +
+                    "AND room_maxpax >= :maxpax " +
+                    "AND (:roomtype is null or fk_roomtype_id = :roomtype)" +
+                    "OR booking_checkin NOT BETWEEN :startDate AND :endDate AND booking_checkout NOT BETWEEN :startDate AND :endDate " +
                     "AND (:roomNumber is null or room_number = :roomNumber)" +
                     "AND room_maxpax >= :maxpax " +
                     "AND (:roomtype is null or fk_roomtype_id = :roomtype)",
@@ -39,6 +42,4 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             @Param("maxpax") Integer maxpax,
             @Param("roomtype") Integer roomtype
     );
-
-
 }

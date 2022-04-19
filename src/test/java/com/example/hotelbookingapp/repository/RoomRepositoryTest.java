@@ -10,9 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @SpringBootTest(classes = HotelBookingAppApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RoomRepositoryTest {
@@ -72,5 +70,4 @@ class RoomRepositoryTest {
         Integer roomType = 3;
         System.out.println(roomRepository.findAvailable(roomNumber, startDate,endDate,maxpax,roomType));
     }
-
 }

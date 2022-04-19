@@ -1,6 +1,7 @@
 package com.example.hotelbookingapp.controller;
 
 import com.example.hotelbookingapp.dto.BookingDto;
+import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
 import com.example.hotelbookingapp.service.Imp.BookingServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
