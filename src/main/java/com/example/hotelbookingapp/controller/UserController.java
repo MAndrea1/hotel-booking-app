@@ -1,8 +1,10 @@
 package com.example.hotelbookingapp.controller;
 
+import com.example.hotelbookingapp.dto.ReserveDto;
 import com.example.hotelbookingapp.dto.UpdateGuestDto;
 import com.example.hotelbookingapp.dto.UpdateUserDto;
 import com.example.hotelbookingapp.model.User;
+import com.example.hotelbookingapp.service.Imp.BookingServiceImp;
 import com.example.hotelbookingapp.service.Imp.GuestServiceImp;
 import com.example.hotelbookingapp.service.Imp.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class UserController {
 
     @Autowired
     private GuestServiceImp guestService;
+
+    @Autowired
+    private BookingServiceImp bookingService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -91,6 +96,17 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, couldn't delete entity\"}");
+        }
+    }
+
+    @PostMapping("reserve/{userId}")
+    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public ResponseEntity<?> reserve(@PathVariable(value = "userId") String userId, @RequestBody ReserveDto reserveDto){
+        reserveDto.setFkGuestId(Integer.valueOf(userId));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(bookingService.reserve(reserveDto));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, couldn't make reserve\"}");
         }
     }
 }

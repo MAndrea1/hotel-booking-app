@@ -24,15 +24,14 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
     List<Room> findByCustom(@Param("facility") String facility);
 
     @Query(
-            value = "SELECT * " +
-                    "FROM rooms LEFT JOIN bookings_rooms ON fk_room_number = room_number LEFT JOIN bookings ON fk_booking_id = booking_id " +
-                    "WHERE booking_checkin IS NULL " +
+            value = "SELECT * FROM rooms " +
+                    "WHERE (:roomtype is null or fk_roomtype_id = :roomtype)" +
                     "AND room_maxpax >= :maxpax " +
-                    "AND (:roomtype is null or fk_roomtype_id = :roomtype)" +
-                    "OR booking_checkin NOT BETWEEN :startDate AND :endDate AND booking_checkout NOT BETWEEN :startDate AND :endDate " +
                     "AND (:roomNumber is null or room_number = :roomNumber)" +
-                    "AND room_maxpax >= :maxpax " +
-                    "AND (:roomtype is null or fk_roomtype_id = :roomtype)",
+                    "AND room_number NOT IN " +
+                    "(SELECT room_number " +
+                    "FROM rooms LEFT JOIN bookings_rooms ON fk_room_number = room_number LEFT JOIN bookings ON fk_booking_id = booking_id " +
+                    "WHERE booking_checkin BETWEEN :startDate AND :endDate AND booking_checkout BETWEEN :startDate AND :endDate )",
             nativeQuery = true
     )
     List<Room> findAvailable(
@@ -42,4 +41,6 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             @Param("maxpax") Integer maxpax,
             @Param("roomtype") Integer roomtype
     );
+
+
 }

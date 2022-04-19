@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "bookings")
@@ -35,4 +36,10 @@ public class Booking {
 
     @Column(name = "booking_notes")
     private String bookingNotes;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "bookings_rooms",
+            joinColumns = @JoinColumn(name = "fk_booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "fk_room_number"))
+    private List<Room> bookedRooms;
 }

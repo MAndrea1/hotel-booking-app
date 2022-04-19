@@ -17,7 +17,6 @@ class BookingRepositoryTest {
     @Test
     public void printGuestRepositoryTypeAll() {
         List<Booking> bookingList = bookingRepository.findAll();
-
         System.out.println("Booking = " + bookingList);
     }
 
