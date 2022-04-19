@@ -1,5 +1,7 @@
 package com.example.hotelbookingapp.controller;
 
+import com.example.hotelbookingapp.dto.SignUpUser;
+import com.example.hotelbookingapp.dto.UpdateGuestDto;
 import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.model.User;
 import com.example.hotelbookingapp.service.GuestService;
@@ -9,34 +11,72 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/guests")
 @PreAuthorize("hasRole('SUPERADMIN') or hasRole('ADMIN')")
 public class GuestsController {
 
     @Autowired
     private GuestServiceImp guestService;
 
-    @GetMapping({"/guests"})
+    @GetMapping({""})
     public List<Guest> getGuests() {
         return guestService.findAll();
     }
 
-    @GetMapping("/guest/{userId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
-    public ResponseEntity<?> getGuestById(@PathVariable(value = "userId") String userId, Principal principal) {
-        return ResponseEntity.status(HttpStatus.OK).body(guestService.findById(Integer.valueOf(userId)));
+    @GetMapping("/{guestId}")
+    public ResponseEntity<?> getGuestById(@PathVariable(value = "guestId") String guestId, Principal principal) {
+        return ResponseEntity.status(HttpStatus.OK).body(guestService.findById(Integer.valueOf(guestId)));
     }
 
+    @PutMapping("/{guestId}")
+    public ResponseEntity<?> updateGuestById(@PathVariable(value = "guestId") String guestId, @RequestBody UpdateGuestDto updateGuestDto, Principal principal) {
+        try{
+            guestService.update(Integer.valueOf(guestId), updateGuestDto);
+            return ResponseEntity.status(HttpStatus.OK).body("Data for " + guestService.findById(Integer.valueOf(guestId)).get().getGuestEmail() + " updated successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, couldn't update data\"}");
+        }
+    }
 
+    @PostMapping("/addnewguest")
+    public ResponseEntity<?> newUser(@Valid @RequestBody UpdateGuestDto updateGuestDto, BindingResult bindingResult) {
+        try {
+            if (bindingResult.hasErrors())
+                return new ResponseEntity<>("Error in fields", HttpStatus.BAD_REQUEST);
+            if (Boolean.TRUE.equals(guestService.existByEmail(updateGuestDto.getGuestEmail())))
+                return new ResponseEntity<>("Email already in database", HttpStatus.BAD_REQUEST);
+
+            Guest newGuest = new Guest();
+            newGuest.setGuestFirstname(updateGuestDto.getGuestFirstname());
+            newGuest.setGuestLastname(updateGuestDto.getGuestLastname());
+            newGuest.setGuestEmail(updateGuestDto.getGuestEmail());
+            newGuest.setGuestPhone(updateGuestDto.getGuestPhone());
+            newGuest.setGuestCountry(updateGuestDto.getGuestCountry());
+            guestService.save(newGuest);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("User " + updateGuestDto.getGuestEmail() + " created successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Couldn't retrieve data from servers, please try again later\"}");
+        }
+    }
+
+    @DeleteMapping("/{guestId}")
+    public ResponseEntity<?> deleteGuestById(@PathVariable(value = "guestId") String guestId){
+        try {
+            guestService.delete(Integer.valueOf(guestId));
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Guest deleted");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, couldn't delete entity\"}");
+        }
+    }
 
 }

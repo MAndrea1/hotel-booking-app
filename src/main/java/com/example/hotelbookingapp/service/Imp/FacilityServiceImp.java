@@ -23,7 +23,7 @@ public class FacilityServiceImp implements FacilityService {
 
     @Override
     public Optional<Facility> findById(Integer id) throws Exception {
-        return null;
+        return facilityRepository.findById(id);
     }
 
     @Override

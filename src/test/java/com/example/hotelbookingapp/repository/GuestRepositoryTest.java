@@ -1,6 +1,7 @@
 package com.example.hotelbookingapp.repository;
 
 import com.example.hotelbookingapp.HotelBookingAppApplication;
+import com.example.hotelbookingapp.model.Booking;
 import com.example.hotelbookingapp.model.Guest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,20 @@ class GuestRepositoryTest {
         Optional<Guest> guestList = guestRepository.findById(2);
 
         System.out.println("Guests = " + guestList);
+    }
+
+    @Test
+    public void printExistsByFkUserId() {
+        Integer idToTest = 28;
+
+        System.out.println("exists: " + guestRepository.existsByFkUserId(idToTest));
+        if (guestRepository.existsByFkUserId(idToTest)){
+            Guest guest = guestRepository.findByUserId(idToTest).get();
+            System.out.println("guest: " + guest);
+            Integer guestId = guest.getId();
+            System.out.println("guest id: " + guestId);
+            System.out.println("guest: " + guestRepository.findById(guestId));
+        }
     }
 
 

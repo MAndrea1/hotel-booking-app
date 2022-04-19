@@ -26,7 +26,7 @@ public class RoomTypeServiceImp implements RoomTypeService {
 
     @Override
     public Optional<RoomType> findById(Integer id) throws Exception {
-        return Optional.empty();
+        return roomTypeRepository.findById(id);
     }
 
     @Override
