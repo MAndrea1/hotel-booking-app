@@ -1,6 +1,7 @@
 package com.example.hotelbookingapp.service.Imp;
 
 import com.example.hotelbookingapp.dto.BookingDto;
+import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
 import com.example.hotelbookingapp.mapper.BookingInDTOToBooking;
 import com.example.hotelbookingapp.model.Booking;
 import com.example.hotelbookingapp.model.Room;
