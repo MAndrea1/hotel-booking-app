@@ -1,13 +1,9 @@
 package com.example.hotelbookingapp.controller;
 
 import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
-import com.example.hotelbookingapp.dto.UpdateGuestDto;
 import com.example.hotelbookingapp.dto.UpdateRoomDto;
 import com.example.hotelbookingapp.model.*;
-import com.example.hotelbookingapp.service.Imp.FacilityServiceImp;
-import com.example.hotelbookingapp.service.Imp.RoomServiceImp;
-import com.example.hotelbookingapp.service.Imp.RoomTypeServiceImp;
-import com.example.hotelbookingapp.service.Imp.RoomsFacilityServiceImp;
+import com.example.hotelbookingapp.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,10 +19,10 @@ import java.util.List;
 public class RoomController {
 
     @Autowired
-    private RoomServiceImp roomService;
+    private RoomService roomService;
 
     @GetMapping({""})
-    public List<Room> getRooms() {
+    public List<Room> getRooms() throws Exception {
         return roomService.findAll();
     }
 

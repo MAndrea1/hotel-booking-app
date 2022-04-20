@@ -2,10 +2,7 @@ package com.example.hotelbookingapp.service;
 
 import com.example.hotelbookingapp.dto.SignUpUser;
 import com.example.hotelbookingapp.dto.UpdateUserDto;
-import com.example.hotelbookingapp.model.Room;
 import com.example.hotelbookingapp.model.User;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;

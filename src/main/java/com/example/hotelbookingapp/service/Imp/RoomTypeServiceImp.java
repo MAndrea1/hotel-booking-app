@@ -1,7 +1,5 @@
 package com.example.hotelbookingapp.service.Imp;
 
-
-import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.model.RoomType;
 import com.example.hotelbookingapp.repository.RoomTypeRepository;
 import com.example.hotelbookingapp.service.RoomTypeService;

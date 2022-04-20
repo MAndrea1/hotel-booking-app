@@ -1,7 +1,6 @@
 package com.example.hotelbookingapp.service.Imp;
 
 import com.example.hotelbookingapp.model.Facility;
-import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.repository.FacilityRepository;
 import com.example.hotelbookingapp.service.FacilityService;
 import org.springframework.beans.factory.annotation.Autowired;

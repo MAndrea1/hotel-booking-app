@@ -1,7 +1,7 @@
 package com.example.hotelbookingapp.controller;
 
 import com.example.hotelbookingapp.model.PaymentType;
-import com.example.hotelbookingapp.service.Imp.PaymentTypeServiceImp;
+import com.example.hotelbookingapp.service.PaymentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +14,10 @@ import java.util.List;
 public class PaymentTypeController {
 
     @Autowired
-    private PaymentTypeServiceImp paymentTypeService;
+    private PaymentTypeService paymentTypeService;
 
     @GetMapping({"/paymenttypes"})
-    public List<PaymentType> getPaymentTypes() {
+    public List<PaymentType> getPaymentTypes() throws Exception {
         return paymentTypeService.findAll();
     }
 }

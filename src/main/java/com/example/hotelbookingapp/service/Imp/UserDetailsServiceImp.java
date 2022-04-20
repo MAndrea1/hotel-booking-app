@@ -1,7 +1,6 @@
 package com.example.hotelbookingapp.service.Imp;
 
 import com.example.hotelbookingapp.model.User;
-import com.example.hotelbookingapp.service.Imp.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

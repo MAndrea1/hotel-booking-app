@@ -1,6 +1,5 @@
 package com.example.hotelbookingapp.service.Imp;
 
-
 import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
 import com.example.hotelbookingapp.dto.UpdateRoomDto;
 import com.example.hotelbookingapp.model.Facility;
@@ -9,11 +8,9 @@ import com.example.hotelbookingapp.repository.RoomRepository;
 import com.example.hotelbookingapp.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;

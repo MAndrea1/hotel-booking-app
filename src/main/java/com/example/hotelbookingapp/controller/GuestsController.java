@@ -1,13 +1,9 @@
 package com.example.hotelbookingapp.controller;
 
-import com.example.hotelbookingapp.dto.SignUpUser;
 import com.example.hotelbookingapp.dto.UpdateGuestDto;
 import com.example.hotelbookingapp.model.Guest;
-import com.example.hotelbookingapp.model.User;
-import com.example.hotelbookingapp.service.GuestService;
 import com.example.hotelbookingapp.service.Imp.GuestServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/guests")

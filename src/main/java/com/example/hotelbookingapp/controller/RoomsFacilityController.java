@@ -1,7 +1,7 @@
 package com.example.hotelbookingapp.controller;
 
 import com.example.hotelbookingapp.model.RoomsFacility;
-import com.example.hotelbookingapp.service.Imp.RoomsFacilityServiceImp;
+import com.example.hotelbookingapp.service.RoomsFacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,15 +14,10 @@ import java.util.List;
 public class RoomsFacilityController {
 
     @Autowired
-    private RoomsFacilityServiceImp roomsFacilityService;
+    private RoomsFacilityService roomsFacilityService;
 
     @GetMapping({"/roomfacilities"})
-    public List<RoomsFacility> getFacilities() {
-        return roomsFacilityService.findAll();
-    }
-
-    @GetMapping({"/roomfacilities/{id}"})
-    public List<RoomsFacility> getFacilityListForId() {
+    public List<RoomsFacility> getFacilities() throws Exception {
         return roomsFacilityService.findAll();
     }
 

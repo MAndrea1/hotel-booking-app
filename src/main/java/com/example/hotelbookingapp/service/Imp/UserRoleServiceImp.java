@@ -1,6 +1,5 @@
 package com.example.hotelbookingapp.service.Imp;
 
-import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.model.UserRole;
 import com.example.hotelbookingapp.repository.UserRoleRepository;
 import com.example.hotelbookingapp.service.UserRoleService;

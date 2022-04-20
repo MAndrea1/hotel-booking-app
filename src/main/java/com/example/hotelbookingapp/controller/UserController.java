@@ -4,9 +4,9 @@ import com.example.hotelbookingapp.dto.ReserveDto;
 import com.example.hotelbookingapp.dto.UpdateGuestDto;
 import com.example.hotelbookingapp.dto.UpdateUserDto;
 import com.example.hotelbookingapp.model.User;
-import com.example.hotelbookingapp.service.Imp.BookingServiceImp;
-import com.example.hotelbookingapp.service.Imp.GuestServiceImp;
-import com.example.hotelbookingapp.service.Imp.UserServiceImp;
+import com.example.hotelbookingapp.service.BookingService;
+import com.example.hotelbookingapp.service.GuestService;
+import com.example.hotelbookingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,20 +24,20 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private UserServiceImp userService;
+    private UserService userService;
 
     @Autowired
-    private GuestServiceImp guestService;
+    private GuestService guestService;
 
     @Autowired
-    private BookingServiceImp bookingService;
+    private BookingService bookingService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
     @GetMapping({"/allusers"})
     @PreAuthorize("hasRole('SUPERADMIN')")
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers() throws Exception {
         return userService.findAll();
     }
 

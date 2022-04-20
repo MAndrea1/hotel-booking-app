@@ -1,9 +1,7 @@
 package com.example.hotelbookingapp.service.Imp;
 
-import com.example.hotelbookingapp.config.AuthenticationEP;
 import com.example.hotelbookingapp.dto.UpdateGuestDto;
 import com.example.hotelbookingapp.model.Guest;
-import com.example.hotelbookingapp.model.User;
 import com.example.hotelbookingapp.repository.GuestRepository;
 import com.example.hotelbookingapp.service.GuestService;
 import org.slf4j.Logger;
