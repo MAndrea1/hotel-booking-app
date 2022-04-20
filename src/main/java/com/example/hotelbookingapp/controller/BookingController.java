@@ -47,7 +47,6 @@ public class BookingController {
         }
     }
 
-
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> update(@PathVariable Integer id,@RequestBody BookingDto bookingDto){

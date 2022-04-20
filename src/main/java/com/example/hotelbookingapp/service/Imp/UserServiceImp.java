@@ -1,10 +1,9 @@
 package com.example.hotelbookingapp.service.Imp;
 
 
+import com.example.hotelbookingapp.dto.SignUpUser;
 import com.example.hotelbookingapp.dto.UpdateUserDto;
-import com.example.hotelbookingapp.model.Booking;
-import com.example.hotelbookingapp.model.Guest;
-import com.example.hotelbookingapp.model.User;
+import com.example.hotelbookingapp.model.*;
 import com.example.hotelbookingapp.repository.UserRepository;
 import com.example.hotelbookingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +61,31 @@ public class UserServiceImp implements UserService {
         return userRepository.findAllExceptRole(role);
     }
 
+    @Override
+    public User save(SignUpUser signUpUser) throws Exception {
+        try{
+            User newUser = new User();
+            newUser.setUserEmail(signUpUser.getEmail());
+            newUser.setUserPassword(signUpUser.getPassword());
+            newUser.setFkUserrole(getrole(signUpUser));
+            userRepository.save(newUser);
+            return newUser;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 
+    private UserRole getrole(SignUpUser signUpUser) {
+        String role = Role.USER.toString();
+        if (signUpUser.getRole().equals(2)) {
+            role = Role.ADMIN.toString();
+        } else if (signUpUser.getRole().equals(1)) {
+            role = Role.SUPERADMIN.toString();
+        }
+        return new UserRole(signUpUser.getRole(), role);
+    }
+
+    @Override
     public User save(User user) throws Exception {
         try{
             user = userRepository.save(user);

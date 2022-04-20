@@ -13,6 +13,7 @@ import com.example.hotelbookingapp.service.Imp.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,13 +39,13 @@ public class RegistrationController {
     GuestServiceImp guestServiceImp;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
     AuthenticationManager authenticationManager;
 
     @Autowired
     TokenGen tokenGen;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
     public ResponseEntity<?> newUser(@Valid @RequestBody SignUpUser signUpUser, BindingResult bindingResult) {
@@ -54,11 +55,10 @@ public class RegistrationController {
             if (Boolean.TRUE.equals(userServiceImp.existsByEmail(signUpUser.getEmail())))
                 return new ResponseEntity<>("Email already in database", HttpStatus.BAD_REQUEST);
 
-            User newUser = new User();
-            newUser.setUserEmail(signUpUser.getEmail());
-            newUser.setUserPassword(passwordEncoder.encode(signUpUser.getPassword()));
-            newUser.setFkUserrole(getrole(signUpUser));
-            userServiceImp.save(newUser);
+            signUpUser.setPassword(passwordEncoder.encode(signUpUser.getPassword()));
+            signUpUser.setRole(3);
+
+            User newUser = userServiceImp.save(signUpUser);
 
             Guest newGuest = new Guest();
             newGuest.setGuestFirstname(signUpUser.getFirstName());
@@ -66,7 +66,6 @@ public class RegistrationController {
             newGuest.setGuestEmail(signUpUser.getEmail());
             newGuest.setGuestPhone(signUpUser.getPhone());
             newGuest.setGuestCountry(signUpUser.getCountry());
-            newUser = userServiceImp.findByUserEmail(signUpUser.getEmail()).get();
             newGuest.setFkUserId(newUser.getUserId());
             guestServiceImp.save(newGuest);
 
@@ -76,16 +75,23 @@ public class RegistrationController {
         }
     }
 
-    private UserRole getrole(SignUpUser signUpUser) {
-        String role = Role.USER.toString();
-        if (signUpUser.getRole().equals(2)) {
-            role = Role.ADMIN.toString();
-        } else if (signUpUser.getRole().equals(1)) {
-            role = Role.SUPERADMIN.toString();
-        }
-        return new UserRole(signUpUser.getRole(), role);
-    }
+    @PostMapping("/adminsignup")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    public ResponseEntity<?> newAdmin(@Valid @RequestBody SignUpUser signUpUser, BindingResult bindingResult) {
+        try {
+            if (bindingResult.hasErrors())
+                return new ResponseEntity<>("Error in fields", HttpStatus.BAD_REQUEST);
+            if (Boolean.TRUE.equals(userServiceImp.existsByEmail(signUpUser.getEmail())))
+                return new ResponseEntity<>("Email already in database", HttpStatus.BAD_REQUEST);
 
+            signUpUser.setPassword(passwordEncoder.encode(signUpUser.getPassword()));
+            signUpUser.setRole(2);
+            User newUser = userServiceImp.save(signUpUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Admin " + signUpUser.getEmail() + " created successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Couldn't retrieve data from servers, please try again later\"}");
+        }
+    }
 
     @PostMapping("/login")
     public ResponseEntity<JwtDto> login (@Valid @RequestBody LoginUser loginUser, BindingResult bindingResult) {
