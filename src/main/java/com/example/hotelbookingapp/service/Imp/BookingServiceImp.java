@@ -101,6 +101,14 @@ public class BookingServiceImp implements BookingService {
     @Override
     public Booking reserve(ReserveDto reserveDto) throws Exception {
 
+        if (reserveDto.getBookingCheckin().isAfter(reserveDto.getBookingCheckout())){
+            throw new Exception("Check-in date cannot be after check-out date");
+        }
+
+        if(LocalDate.now().isAfter(reserveDto.getBookingCheckin())){
+            throw new Exception("Check-in date cannot be before current date");
+        }
+
         RoomAvailabilityDto roomAvailabilityDto = new RoomAvailabilityDto();
         roomAvailabilityDto.setRoomNumber(reserveDto.getListRooms().get(0));
         roomAvailabilityDto.setBookingCheckin(reserveDto.getBookingCheckin());

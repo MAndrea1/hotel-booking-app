@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootTest(classes = HotelBookingAppApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -19,5 +20,4 @@ class BookingRepositoryTest {
         List<Booking> bookingList = bookingRepository.findAll();
         System.out.println("Booking = " + bookingList);
     }
-
 }
