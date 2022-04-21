@@ -15,6 +15,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins= "http://localhost:3000")
 @RequestMapping("/api/guests")
 @PreAuthorize("hasRole('SUPERADMIN') or hasRole('ADMIN')")
 public class GuestsController {

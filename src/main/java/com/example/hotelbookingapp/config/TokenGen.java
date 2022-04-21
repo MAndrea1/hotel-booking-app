@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,8 +28,7 @@ public class TokenGen {
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    private static final int EXPIRATION_TIME = 60;
 
     public String generateToken (Authentication authentication) {
         org.springframework.security.core.userdetails.User user = (User) authentication.getPrincipal();
@@ -38,7 +38,7 @@ public class TokenGen {
         return Jwts.builder().setSubject(user.getUsername())
                 .setIssuedAt(new Date())
                 .claim("roles", roles)
-                .setExpiration(new Date(new Date().getTime() + expiration))
+                .setExpiration(calculateExpirationDate(EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, secret.getBytes())
                 .compact();
     }
@@ -80,8 +80,15 @@ public class TokenGen {
         return Jwts.builder().setSubject(dni)
                 .setIssuedAt(new Date())
                 .claim("roles", roles)
-                .setExpiration(new Date(new Date().getTime() + expiration))
+                .setExpiration(calculateExpirationDate(EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, secret.getBytes())
                 .compact();
+    }
+
+    private Date calculateExpirationDate(int expirationTime) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(new Date().getTime());
+        calendar.add(Calendar.MINUTE, expirationTime);
+        return new Date(calendar.getTime().getTime());
     }
 }

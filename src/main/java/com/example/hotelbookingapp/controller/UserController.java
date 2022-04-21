@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins= "http://localhost:3000")
 @RequestMapping("/api/users")
-@PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
 public class UserController {
 
     @Autowired
@@ -48,16 +48,19 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public Optional<User> getUserById(@PathVariable(value = "userId") String userId, Principal principal) {
         return userService.findByUserId(userId);
     }
 
     @GetMapping("/guest/{userId}")
+    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> getGuestByUserId(@PathVariable(value = "userId") String userId, Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(guestService.findByUserId(Integer.valueOf(userId)));
     }
 
     @PutMapping("/guest/{userId}")
+    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> updateGuestByUserId(@PathVariable(value = "userId") String userId, @RequestBody UpdateGuestDto updateGuestDto, Principal principal) {
         try{
             guestService.updateByUserId(Integer.valueOf(userId), updateGuestDto);
@@ -68,6 +71,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
+    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> updateUserById(@PathVariable(value = "userId") String userId, @RequestBody UpdateUserDto updateUserDto, Principal principal) {
         if (userService.findByUserId(String.valueOf(userId)).get().getFkUserrole().getId() == 1) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, cannot update superadmin\"}");
@@ -87,6 +91,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
+    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> deleteUserById(@PathVariable(value = "userId") String userId){
         if (userService.findByUserId(String.valueOf(userId)).get().getFkUserrole().getId() == 1) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, cannot delete superadmin\"}");
@@ -100,6 +105,7 @@ public class UserController {
     }
 
     @PostMapping("reserve/{userId}")
+    @PreAuthorize("#userId == authentication.name or hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> reserve(@PathVariable(value = "userId") String userId, @RequestBody ReserveDto reserveDto){
         try {
             reserveDto.setFkGuestId(Integer.valueOf(guestService.findByUserId(Integer.valueOf(userId)).get().getId()));

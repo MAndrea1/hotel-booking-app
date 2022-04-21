@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins= "http://localhost:3000")
 @RequestMapping("/api/bookings")
 public class BookingController {
 
@@ -20,6 +21,7 @@ public class BookingController {
     private BookingServiceImp bookingService;
 
     @GetMapping({""})
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> getAll() throws Exception {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(bookingService.findAll());
@@ -39,6 +41,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public ResponseEntity<?> getByOne(@PathVariable Integer id){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(bookingService.findById(id));
