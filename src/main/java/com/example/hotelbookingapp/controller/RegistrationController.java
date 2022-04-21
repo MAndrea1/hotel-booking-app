@@ -8,6 +8,8 @@ import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.model.User;
 import com.example.hotelbookingapp.service.GuestService;
 import com.example.hotelbookingapp.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +75,7 @@ public class RegistrationController {
 
     @PostMapping("/adminsignup")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    @Operation(summary = "SIGN UP new admin", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> newAdmin(@Valid @RequestBody SignUpUser signUpUser, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors())

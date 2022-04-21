@@ -3,6 +3,8 @@ package com.example.hotelbookingapp.controller;
 import com.example.hotelbookingapp.dto.UpdateGuestDto;
 import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.service.Imp.GuestServiceImp;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +24,19 @@ public class GuestsController {
     private GuestServiceImp guestService;
 
     @GetMapping({""})
+    @Operation(summary = "GET all guests", security = @SecurityRequirement(name = "bearerAuth"))
     public List<Guest> getGuests() {
         return guestService.findAll();
     }
 
     @GetMapping("/{guestId}")
+    @Operation(summary = "GET guest by ID", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> getGuestById(@PathVariable(value = "guestId") String guestId, Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(guestService.findById(Integer.valueOf(guestId)));
     }
 
     @PutMapping("/{guestId}")
+    @Operation(summary = "PUT guest by ID", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> updateGuestById(@PathVariable(value = "guestId") String guestId, @RequestBody UpdateGuestDto updateGuestDto, Principal principal) {
         try{
             guestService.update(Integer.valueOf(guestId), updateGuestDto);
@@ -42,6 +47,7 @@ public class GuestsController {
     }
 
     @PostMapping("/addnewguest")
+    @Operation(summary = "POST guest by ID", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> newUser(@Valid @RequestBody UpdateGuestDto updateGuestDto, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors())
@@ -64,6 +70,7 @@ public class GuestsController {
     }
 
     @DeleteMapping("/{guestId}")
+    @Operation(summary = "DELETE guest by ID", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> deleteGuestById(@PathVariable(value = "guestId") String guestId){
         try {
             guestService.delete(Integer.valueOf(guestId));

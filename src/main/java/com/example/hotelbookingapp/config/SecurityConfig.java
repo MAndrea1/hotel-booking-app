@@ -65,9 +65,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/test/**").permitAll() // permit the class of test
-                .antMatchers("/**").permitAll() // permit all the routers after swagger-ui.html
                 .antMatchers(WHITE_LIST_URLS).permitAll()
                 .antMatchers(HttpMethod.DELETE, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
@@ -84,6 +81,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(onePerRequest(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**").antMatchers("/v3/api-docs/**",
+                "/swagger-ui/**", "/swagger-ui/index.html/**");
     }
 
 }

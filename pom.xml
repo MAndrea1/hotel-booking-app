@@ -108,8 +108,8 @@
 
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-data-rest</artifactId>
-			<version>1.6.4</version>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.6.7</version>
 		</dependency>
 
 	</dependencies>
