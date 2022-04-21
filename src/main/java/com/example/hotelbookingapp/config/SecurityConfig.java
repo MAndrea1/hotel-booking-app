@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] WHITE_LIST_URLS = {
+            "/",
             "/registration/**",
             "/api/rooms",
             "/api/rooms/checkavailability"
@@ -64,6 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/test/**").permitAll() // permit the class of test
+                .antMatchers("/**").permitAll() // permit all the routers after swagger-ui.html
                 .antMatchers(WHITE_LIST_URLS).permitAll()
                 .antMatchers(HttpMethod.DELETE, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
