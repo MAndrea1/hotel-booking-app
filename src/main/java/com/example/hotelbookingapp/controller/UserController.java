@@ -36,13 +36,11 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     @GetMapping({"/allusers"})
-    @PreAuthorize("hasRole('SUPERADMIN')")
     public List<User> getAllUsers() throws Exception {
         return userService.findAll();
     }
 
     @GetMapping({""})
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
     public List<User> getPlainUsers() {
         return userService.findAllByRole(3);
     }
