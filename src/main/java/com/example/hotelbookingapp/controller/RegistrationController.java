@@ -23,10 +23,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.text.ParseException;
 
 @RestController
-@CrossOrigin(origins= "http://localhost:3000")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/registration")
 public class RegistrationController {
 
@@ -102,14 +103,22 @@ public class RegistrationController {
                             userService.findByUserEmail(loginUser.getEmail()).get().getUserId(), loginUser.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = tokenGen.generateToken(authentication);
-            JwtDto jwtDto = new JwtDto(jwt);
+            User user = userService.findByUserEmail(loginUser.getEmail()).get();
+            JwtDto jwtDto = new JwtDto(jwt, user);
+            if(guestService.existByEmail(user.getUserEmail())) {
+                jwtDto.setName(guestService.findByUserId(user.getUserId()).get().getGuestFirstname());
+            }
             return new ResponseEntity<>(jwtDto,HttpStatus.OK);
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<JwtDto> refreshToken (@RequestBody JwtDto jwtDto) throws ParseException {
+    public ResponseEntity<JwtDto> refreshToken (@RequestBody JwtDto jwtDto, Principal principal) throws ParseException {
         String token = tokenGen.refreshToken(jwtDto);
-        JwtDto jwt = new JwtDto(token);
+        User user = userService.findByUserId(principal.getName()).get();
+        JwtDto jwt = new JwtDto(token, user);
+        if(guestService.existByEmail(user.getUserEmail())) {
+            jwt.setName(guestService.findByUserId(user.getUserId()).get().getGuestFirstname());
+        }
         return new ResponseEntity<>(jwt, HttpStatus.OK);
     }
 
