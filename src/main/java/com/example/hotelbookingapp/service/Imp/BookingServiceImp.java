@@ -101,6 +101,14 @@ public class BookingServiceImp implements BookingService {
     @Override
     public Booking reserve(ReserveDto reserveDto) throws Exception {
 
+        if (reserveDto.getBookingCheckin().isAfter(reserveDto.getBookingCheckout())){
+            throw new Exception("Check-in date cannot be after check-out date");
+        }
+
+        if(LocalDate.now().isAfter(reserveDto.getBookingCheckin())){
+            throw new Exception("Check-in date cannot be before current date");
+        }
+
         RoomAvailabilityDto roomAvailabilityDto = new RoomAvailabilityDto();
         roomAvailabilityDto.setRoomNumber(reserveDto.getListRooms().get(0));
         roomAvailabilityDto.setBookingCheckin(reserveDto.getBookingCheckin());
@@ -112,37 +120,38 @@ public class BookingServiceImp implements BookingService {
             throw new Exception("--Room not available--");
         }
 
-        Booking booking = new Booking();
-        booking.setBookingDate(LocalDate.now());
-        booking.setBookingCheckin(reserveDto.getBookingCheckin());
-        booking.setBookingCheckout(reserveDto.getBookingCheckout());
-        booking.setBookingBreakfast(reserveDto.getBookingBreakfast());
-        booking.setBookingStatus(reserveDto.getStatus());
-        booking.setFkGuestId(reserveDto.getFkGuestId());
-        booking.setBookingNotes(reserveDto.getBookingNotes());
+        Booking newBooking = new Booking();
+        newBooking.setBookingDate(LocalDate.now());
+        newBooking.setBookingCheckin(reserveDto.getBookingCheckin());
+        newBooking.setBookingCheckout(reserveDto.getBookingCheckout());
+        newBooking.setBookingBreakfast(reserveDto.getBookingBreakfast());
+        newBooking.setBookingStatus(reserveDto.getStatus());
+        newBooking.setFkGuestId(reserveDto.getFkGuestId());
+        newBooking.setBookingNotes(reserveDto.getBookingNotes());
         List<Room> rooms = new ArrayList<>();
+//        rooms.add(roomService.findById(101).get());
         if (!reserveDto.getListRooms().isEmpty()) {
             for(Integer roomNumber : reserveDto.getListRooms()) {
                 rooms.add(roomService.findById(roomNumber).get());
             }
         }
-        booking.setBookedRooms(rooms);
-        bookingRepository.save(booking);
+        newBooking.setBookedRooms(rooms);
+        bookingRepository.save(newBooking);
 
         Payment payment = new Payment();
-        payment.setFkBookingNumber(booking);
+        payment.setFkBookingNumber(newBooking);
         payment.setFkPaymenttypeId(paymentTypeServiceImp.findById(reserveDto.getPaymentMethod()).get());
         payment.setPaymentDate(LocalDate.now());
 
-        LocalDate checkin = booking.getBookingCheckin();
-        LocalDate checkout = booking.getBookingCheckout();
+        LocalDate checkin = newBooking.getBookingCheckin();
+        LocalDate checkout = newBooking.getBookingCheckout();
         Period period = Period.between(checkin, checkout);
         int days = Math.abs(period.getDays());
-        BigDecimal amount = booking.getBookedRooms().get(0).getRoomPrice().multiply(BigDecimal.valueOf(days));
+        BigDecimal amount = newBooking.getBookedRooms().get(0).getRoomPrice().multiply(BigDecimal.valueOf(days));
         payment.setPaymentsAmount(amount.floatValue());
 
         paymentService.save(payment);
 
-        return booking;
+        return newBooking;
     }
 }

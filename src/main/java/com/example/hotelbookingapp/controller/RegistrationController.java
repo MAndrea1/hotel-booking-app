@@ -8,6 +8,8 @@ import com.example.hotelbookingapp.model.Guest;
 import com.example.hotelbookingapp.model.User;
 import com.example.hotelbookingapp.service.GuestService;
 import com.example.hotelbookingapp.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +20,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.text.ParseException;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/registration")
 public class RegistrationController {
 
@@ -75,6 +76,7 @@ public class RegistrationController {
 
     @PostMapping("/adminsignup")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    @Operation(summary = "SIGN UP new admin", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> newAdmin(@Valid @RequestBody SignUpUser signUpUser, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors())
@@ -101,14 +103,22 @@ public class RegistrationController {
                             userService.findByUserEmail(loginUser.getEmail()).get().getUserId(), loginUser.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = tokenGen.generateToken(authentication);
-            JwtDto jwtDto = new JwtDto(jwt);
+            User user = userService.findByUserEmail(loginUser.getEmail()).get();
+            JwtDto jwtDto = new JwtDto(jwt, user);
+            if(guestService.existByEmail(user.getUserEmail())) {
+                jwtDto.setName(guestService.findByUserId(user.getUserId()).get().getGuestFirstname());
+            }
             return new ResponseEntity<>(jwtDto,HttpStatus.OK);
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<JwtDto> refreshToken (@RequestBody JwtDto jwtDto) throws ParseException {
+    public ResponseEntity<JwtDto> refreshToken (@RequestBody JwtDto jwtDto, Principal principal) throws ParseException {
         String token = tokenGen.refreshToken(jwtDto);
-        JwtDto jwt = new JwtDto(token);
+        User user = userService.findByUserId(principal.getName()).get();
+        JwtDto jwt = new JwtDto(token, user);
+        if(guestService.existByEmail(user.getUserEmail())) {
+            jwt.setName(guestService.findByUserId(user.getUserId()).get().getGuestFirstname());
+        }
         return new ResponseEntity<>(jwt, HttpStatus.OK);
     }
 

@@ -4,10 +4,12 @@ import com.example.hotelbookingapp.service.Imp.UserDetailsServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,9 +23,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] WHITE_LIST_URLS = {
-            "/test",
+            "/",
             "/registration/**",
-            "/api/rooms/**",
+            "/api/rooms",
+            "/api/rooms/checkavailability"
     };
 
     @Autowired
@@ -63,7 +66,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers(WHITE_LIST_URLS).permitAll()
-                .antMatchers("/api/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
+                .antMatchers(HttpMethod.PUT, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/users/allusers").hasRole("SUPERADMIN")
+                .antMatchers(HttpMethod.GET, "/api/users").hasAnyRole("ADMIN", "SUPERADMIN")
+                .antMatchers("/api/bookings/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .antMatchers("/api/guests/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .antMatchers("/api/payments/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEP)
                 .and()
@@ -71,4 +82,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(onePerRequest(), UsernamePasswordAuthenticationFilter.class);
     }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**").antMatchers("/v3/api-docs/**",
+                "/swagger-ui/**", "/swagger-ui/index.html/**");
+    }
+
 }

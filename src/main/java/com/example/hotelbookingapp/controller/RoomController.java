@@ -4,10 +4,11 @@ import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
 import com.example.hotelbookingapp.dto.UpdateRoomDto;
 import com.example.hotelbookingapp.model.*;
 import com.example.hotelbookingapp.service.RoomService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins= "http://localhost:3000")
 @RequestMapping("/api/rooms")
 public class RoomController {
 
@@ -48,7 +50,7 @@ public class RoomController {
     }
 
     @PostMapping("/addnewroom")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    @Operation(summary = "POST new room", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> newRoom(@Valid @RequestBody UpdateRoomDto updateRoomDto, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors())
@@ -63,7 +65,7 @@ public class RoomController {
     }
 
     @PutMapping("/{roomId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    @Operation(summary = "PUT room by ID", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> updateRoom(@PathVariable(value = "roomId") String roomId, @Valid @RequestBody UpdateRoomDto updateRoomDto, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors())
@@ -78,7 +80,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/{roomId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
+    @Operation(summary = "DELETE room by ID", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> deleteRoom(@PathVariable(value = "roomId") String roomId){
         try {
             roomService.delete(Integer.valueOf(roomId));
