@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -119,7 +120,7 @@ public class UserController {
             reserveDto.setFkGuestId(Integer.valueOf(guestService.findByUserId(Integer.valueOf(userId)).get().getId()));
             return ResponseEntity.status(HttpStatus.OK).body(bookingService.reserve(reserveDto));
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error, couldn't make reserve\"}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

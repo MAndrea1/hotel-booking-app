@@ -40,6 +40,9 @@ public class BookingServiceImp implements BookingService {
     @Autowired
     private PaymentTypeServiceImp paymentTypeServiceImp;
 
+    @Autowired
+    private GuestServiceImp guestServiceImp;
+
     private final BookingInDTOToBooking bookingInDTOToBooking;
 
     // Implementation Autowired
@@ -120,6 +123,10 @@ public class BookingServiceImp implements BookingService {
             throw new Exception("--Room not available--");
         }
 
+        if (!guestServiceImp.existsById(reserveDto.getFkGuestId())) {
+            throw new Exception("--Guest ID not found--");
+        }
+
         Booking newBooking = new Booking();
         newBooking.setBookingDate(LocalDate.now());
         newBooking.setBookingCheckin(reserveDto.getBookingCheckin());
@@ -136,6 +143,11 @@ public class BookingServiceImp implements BookingService {
             }
         }
         newBooking.setBookedRooms(rooms);
+
+        if (reserveDto.getPaymentMethod().toString().isEmpty()) {
+            throw new Exception("--Please choose a payment method--");
+        }
+
         bookingRepository.save(newBooking);
 
         Payment payment = new Payment();
@@ -149,7 +161,6 @@ public class BookingServiceImp implements BookingService {
         int days = Math.abs(period.getDays());
         BigDecimal amount = newBooking.getBookedRooms().get(0).getRoomPrice().multiply(BigDecimal.valueOf(days));
         payment.setPaymentsAmount(amount.floatValue());
-
         paymentService.save(payment);
 
         return newBooking;

@@ -16,6 +16,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -67,10 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(WHITE_LIST_URLS).permitAll()
                 .antMatchers(HttpMethod.DELETE, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
-                .antMatchers(HttpMethod.PUT, "/**").hasAnyRole("SUPERADMIN", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/users/allusers").hasRole("SUPERADMIN")
-                .antMatchers(HttpMethod.GET, "/api/users").hasAnyRole("ADMIN", "SUPERADMIN")
                 .antMatchers("/api/bookings/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .antMatchers("/api/guests/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .antMatchers("/api/payments/**").hasAnyRole("ADMIN", "SUPERADMIN")
@@ -87,6 +85,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**").antMatchers("/v3/api-docs/**",
                 "/swagger-ui/**", "/swagger-ui/index.html/**");
+    }
+
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/").allowedOrigins("http://localhost:3000");
+            }
+        };
     }
 
 }
