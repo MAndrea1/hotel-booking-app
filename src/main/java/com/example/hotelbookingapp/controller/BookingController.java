@@ -3,12 +3,14 @@ package com.example.hotelbookingapp.controller;
 import com.example.hotelbookingapp.dto.BookingDto;
 import com.example.hotelbookingapp.dto.ReserveDto;
 import com.example.hotelbookingapp.dto.RoomAvailabilityDto;
+import com.example.hotelbookingapp.model.Booking;
 import com.example.hotelbookingapp.service.Imp.BookingServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +37,8 @@ public class BookingController {
     @Operation(summary = "POST new booking", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> adminreserve(@RequestBody ReserveDto reserveDto){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(bookingService.reserve(reserveDto));
+            Booking newBooking = bookingService.reserve(reserveDto);
+            return ResponseEntity.status(HttpStatus.OK).body(newBooking);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -45,7 +48,9 @@ public class BookingController {
     @Operation(summary = "GET booking by ID", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> getByOne(@PathVariable Integer id){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(bookingService.findById(id));
+            Booking booking = bookingService.findById(id).get();
+            System.out.println(booking);
+            return ResponseEntity.status(HttpStatus.OK).body(booking);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Couldn't retrieve data from servers, please try again later\"}");
         }
